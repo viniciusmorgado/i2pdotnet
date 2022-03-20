@@ -1,0 +1,16 @@
+This is a fork of i2pdotnet from Samuel Fisher ported to .NET 6 and rebranched to I2P.NET
+Copyright (c) 2022
+Author: Samuel Fisher - github.com/SamuelFisher
+Port to .NET 6: Vinicius Donatto - github.com/viniciusmorgado
+  
+I2P.NET is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, version 3.
+  
+I2P.NET is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+  
+You should have received a copy of the GNU Lesser General Public License
+along with I2P.NET.  If not, see <http://www.gnu.org/licenses/>.
