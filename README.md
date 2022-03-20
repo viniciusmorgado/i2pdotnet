@@ -1,10 +1,11 @@
-# i2pdotnet
+# I2P.NET
 
 A .NET library for using the I2P Simple Anonymous Messaging (SAM v3.0) bridge.
 
 Supported platforms:
 
-- .NET Standard 1.6
+- .NET 6.0
+- .NET Standard 2.1
 
 This includes the .NET Framework, .NET Core, UWP and more.
 
