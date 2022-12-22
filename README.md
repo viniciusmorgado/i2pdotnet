@@ -7,7 +7,7 @@ Supported platforms:
 - .NET 6.0
 - .NET Standard 2.1
 
-This includes the .NET Framework, .NET Core, UWP and more.
+This includes the .NET Core, UWP and more.
 
 ## Usage:
 
