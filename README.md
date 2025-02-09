@@ -1,27 +1,29 @@
 # I2P.NET
 
-A .NET library for using the I2P Simple Anonymous Messaging (SAM v3.0) bridge.
+A modern .NET implementation for the I2P (Invisible Internet Project) network using the SAM v3.0 bridge protocol.
 
-Supported platforms:
+## Overview
 
-- .NET 6.0
-- .NET Standard 2.1
+I2P.NET provides a simple and efficient way to integrate I2P networking capabilities into your .NET applications, enabling anonymous and end-to-end encrypted communication.
 
-This includes the .NET Core, UWP and more.
+## Features
 
-## Usage:
+- SAM v3.0 protocol support
+- Async/await pattern implementation
+- Stream-based communication
+- Destination lookup support
+- Event-driven incoming connections
+- Cross-platform compatibility
 
-You need to have I2P installed, and enable the SAMv3 bridge in the router console.
+## Requirements
 
-See the SampleApp project for a detailed example.
+- .NET 9.0 SDK
+- I2P Router with SAM v3.0 bridge enabled
 
-```csharp
-// Connect to SAM bridge
-var session = new I2PSession(samPort: 7656);
-await session.InitializeAsync();
+## Installation
 
-// Connect to a peer
-var stream = await session.ConnectAsync(destination);
-var writer = new BinaryWriter(stream);
-writer.Write("Testing...");
+Clone the repository and reference the `I2P.NET.SAM` project in your solution:
+
+```xml
+<ProjectReference Include="path/to/I2P.NET.SAM/I2P.NET.SAM.csproj" />
 ```
