@@ -3,67 +3,61 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace I2P.NET.SAM.Connection
+namespace I2P.NET.SAM.Connection;
+
+internal class I2PSamConnection(int samPort) : IDisposable
 {
-    internal class I2PSamConnection : IDisposable
+    private readonly int samPort = samPort;
+    private TcpClient client;
+    private StreamReader reader;
+    private BinaryWriter writer;
+
+    public void Dispose()
     {
-        private readonly int samPort;
-        private TcpClient client;
-        private StreamReader reader;
-        private BinaryWriter writer;
+        client.Dispose();
+    }
 
-        public I2PSamConnection(int samPort)
+    public NetworkStream GetStream() => client.GetStream();
+
+    public async Task Connect()
+    {
+        client = new TcpClient();
+        await client.ConnectAsync(IPAddress.Loopback, samPort);
+
+        var stream = client.GetStream();
+
+        writer = new BinaryWriter(stream);
+        reader = new StreamReader(stream);
+
+        await SendCommand("HELLO VERSION");
+    }
+
+    public Task<IDictionary<string, string>> SendCommand(string command)
+    {
+        Console.WriteLine("> " + command);
+
+        writer.Write(Encoding.UTF8.GetBytes(command + "\n"));
+
+        return Task.Run(() =>
         {
-            this.samPort = samPort;
-        }
+            var responseLine = reader.ReadLine();
 
-        public void Dispose()
-        {
-            client.Dispose();
-        }
+            Console.WriteLine(responseLine);
 
-        public NetworkStream GetStream() => client.GetStream();
+            var response = responseLine.Split(' ');
+            var responseDict = response.Skip(2)
+                                        .Select(x => x.Split('='))
+                                        .ToDictionary(x => x[0], x => x.Length < 2 ? x[0] : x[1]);
 
-        public async Task Connect()
-        {
-            client = new TcpClient();
-            await client.ConnectAsync(IPAddress.Loopback, samPort);
+            responseDict["COMMAND"] = response[0];
+            responseDict["METHOD"] = response[1];
 
-            var stream = client.GetStream();
+            var result = responseDict["RESULT"];
 
-            writer = new BinaryWriter(stream);
-            reader = new StreamReader(stream);
+            if (result != "OK")
+                throw new I2PException("Failed response to: " + command, result, responseLine);
 
-            await SendCommand("HELLO VERSION");
-        }
-
-        public Task<IDictionary<string, string>> SendCommand(string command)
-        {
-            Console.WriteLine("> " + command);
-
-            writer.Write(Encoding.UTF8.GetBytes(command + "\n"));
-
-            return Task.Run(() =>
-            {
-                var responseLine = reader.ReadLine();
-
-                Console.WriteLine(responseLine);
-
-                var response = responseLine.Split(' ');
-                var responseDict = response.Skip(2)
-                                            .Select(x => x.Split('='))
-                                            .ToDictionary(x => x[0], x => x.Length < 2 ? x[0] : x[1]);
-
-                responseDict["COMMAND"] = response[0];
-                responseDict["METHOD"] = response[1];
-
-                var result = responseDict["RESULT"];
-
-                if (result != "OK")
-                    throw new I2PException("Failed response to: " + command, result, responseLine);
-
-                return (IDictionary<string, string>)responseDict;
-            });
-        }
+            return (IDictionary<string, string>)responseDict;
+        });
     }
 }

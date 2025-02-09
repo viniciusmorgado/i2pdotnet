@@ -1,4 +1,5 @@
-﻿using I2P.NET.ConnectionExtensions;
+﻿
+using I2P.NET.Demo.ConnectionExtensions;
 using I2P.NET.SAM.Sessions;
 
 Console.WriteLine("Starting first session ...");
